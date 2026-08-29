@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>測測看你目前的身體狀態最適合哪種舒活精油？｜琪姐 Vicky 的舒活日常</title>
+    <style>
+        :root {
+            --primary: #4A6B5D;       /* 溫潤草本綠 */
+            --primary-light: #EBF2ED; /* 輕柔綠底色 */
+            --accent: #D9825B;        /* 暖陽橘紅 */
+            --line-color: #06C755;    /* LINE 官方綠 */
+            --bg: #FBF9F5;            /* 溫暖柔米色 */
+            --card-bg: #FFFFFF;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --border-color: #E2DDD5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 24px 16px 60px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* 頁首區塊 */
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .header .badge {
+            display: inline-block;
+            background-color: var(--primary-light);
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 4px 14px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .header p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        /* 題目卡片 */
+        .question-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .question-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: var(--text-main);
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .question-title span {
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        /* 選項 */
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: #FAFAFA;
+            font-size: 0.95rem;
+        }
+
+        .option-label:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .option-label input[type="radio"] {
+            display: none;
+        }
+
+        .option-custom-radio {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #BBB;
+            border-radius: 50%;
+            margin-right: 12px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .option-label input[type="radio"]:checked + .option-custom-radio {
+            border-color: var(--primary);
+            background-color: var(--primary);
+        }
+
+        .option-label input[type="radio"]:checked + .option-custom-radio::after {
+            content: "";
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .option-label.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* 提交按鈕 */
+        .submit-btn {
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(74, 107, 93, 0.25);
+            transition: transform 0.1s ease, background-color 0.2s ease;
+            margin-top: 8px;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* 結果展示區塊 */
+        .result-container {
+            display: none;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px 24px;
+            margin-top: 32px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-badge {
+            display: inline-block;
+            background-color: #FFF2EB;
+            color: var(--accent);
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 4px 14px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+        }
+
+        .result-title {
+            font-size: 1.45rem;
+            color: var(--text-main);
+            margin-bottom: 16px;
+        }
+
+        .result-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            text-align: left;
+            background-color: var(--bg);
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        .line-action-box {
+            background-color: #F4FBF7;
+            border: 1.5px dashed var(--line-color);
+            border-radius: 14px;
+            padding: 20px 16px;
+            margin-bottom: 24px;
+        }
+
+        .line-action-box p {
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            color: #2E5C46;
+        }
+
+        .secret-code {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: 1px;
+        }
+
+        .line-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: var(--line-color);
+            color: white;
+            text-decoration: none;
+            padding: 16px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(6, 199, 85, 0.3);
+            transition: transform 0.1s ease;
+        }
+
+        .line-btn:active {
+            transform: scale(0.98);
+        }
+
+        .line-icon {
+            width: 24px;
+            height: 24px;
+            fill: white;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <span class="badge">🌿 1 分鐘身體對話</span>
+        <h1>測測你目前的疲勞狀態<br>最適合哪種舒活精油？</h1>
+        <p>跟著直覺，選出最貼近你這幾天身體真實感受的選項</p>
+    </div>
+
+    <form id="quizForm">
+        <!-- Q1 -->
+        <div class="question-card">
+            <div class="question-title"><span>Q1.</span> 早晨睜開眼睛的那一刻，你最常有的感覺是？</div>
+            <div class="options-group">
+                <label class="option-label">
+                    <input type="radio" name="q1" value="1" required>
+                    <span class="option-custom-radio"></span>
+                    腦袋立刻開始跑今天的待辦事項，有點焦慮
+                </label>
+                <label class="option-label">
+                    <input type="radio" name="q1" value="2">
+                    <span class="option-custom-radio"></span>
+                    脖子好緊，好像昨天晚上睡覺時跟誰打了一架
+                </label>
+                <label class="option-label">
+                    <input type="radio" name="q1" value="3">
+                    <span class="option-custom-radio"></span>
+                    想要翻身，但覺得腰背有點僵硬，需要伸個大懶腰
+                </label>
+                <label class="option-label">
+                    <input type="radio" name="q1" value="4">
+                    <span class="option-custom-radio"></span>
+                    覺得整個人還很沉，尤其是雙腿，好不想下床
+                </label>
+            </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="question-card">
+            <div class="question-title"><span>Q2.</span> 下午三點，工作到一半時，你通常會不自覺做什麼動作？</div>
+            <div class="options-group">
+                <label class="option-label">
+                    <input type="radio" name="q2" value="1" required>
+                    <span class="option-custom-radio"></span>
+                    深呼吸、嘆氣，不自覺揉揉太陽穴或額頭
+                </label>
+                <label class="option-label">
+                    <input type="radio" name="q2" value="2">
+                    <span class="option-custom-radio"></span>
+                    轉轉脖子、捏捏肩膀，試圖把那塊「隱形石頭」搬走
+                </label>
+                <label class="option-label">
+                    <input type="radio" name="q2" value="3">
+                    <span class="option-custom-radio"></span>
+                    扭扭腰、改變坐姿，覺得怎麼坐都卡卡的不對勁
+                </label>
+                <label class="option-label">
+                    <input type="radio" name="q2" value="4">
+                    <span class="option-custom-radio"></span>
+                    敲敲大腿小腿，或把腳稍微墊高，覺得下半身拋拋脹脹的
+                </label>
+            </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="question-card">
+            <div class="question-title"><span>Q3.</span> 終於忙完回到家癱在沙發上，你覺得身體哪裡在發脾氣？</div>
+            <div class="options-group">
+                <label class="option-label">
+                    <input type="radio" name="q3" value="1" required>
+                    <span class="option-custom-radio"></span>
+                    身體還好，但腦袋依然嗡嗡作響，很難放空關機
+                </label>
+                <label class="option-label">
+                    <input type="radio" name="q3" value="2">
+                    <span class="option-custom-radio"></span>
+                    肩頸像維持了一整天的戰鬥姿態，硬到無力揉捏
+                </label>
+                <label class="option-label">
+                    <input type="radio" name="q3" value="3">
+                    <span class="option-custom-radio"></span>
+                    腰背挺不直，只想找個厚抱枕把自己舒服地「摺」進去
+                </label>
+                <label class="option-label">
+                    <input type="radio" name="q3" value="4">
+                    <span class="option-custom-radio"></span>
+                    脫掉鞋襪後小腿緊繃脹痛，只想立刻把它們抬高
+                </label>
+            </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="question-card">
+            <div class="question-title"><span>Q4.</span> 如果現在有 15 分鐘專屬舒活時光，你最渴望哪種放鬆？</div>
+            <div class="options-group">
+                <label class="option-label">
+                    <input type="radio" name="q4" value="1" required>
+                    <span class="option-custom-radio"></span>
+                    一場深度的嗅吸與靜心，撫平焦躁、把呼吸慢下來
+                </label>
+                <label class="option-label">
+                    <input type="radio" name="q4" value="2">
+                    <span class="option-custom-radio"></span>
+                    針對後頸與雙肩的點對點釋放，推開頑固糾結的氣結
+                </label>
+                <label class="option-label">
+                    <input type="radio" name="q4" value="3">
+                    <span class="option-custom-radio"></span>
+                    沿著背部與腰部溫暖熱敷滑動，瓦解深層寒涼與僵硬
+                </label>
+                <label class="option-label">
+                    <input type="radio" name="q4" value="4">
+                    <span class="option-custom-radio"></span>
+                    順著腿部線條由下往上輕盈引導，找回輕快步伐
+                </label>
+            </div>
+        </div>
+
+        <button type="submit" class="submit-btn">✨ 查看我的身體狀態檢測結果</button>
+    </form>
+
+    <!-- 結果區塊 -->
+    <div id="resultContainer" class="result-container">
+        <span class="result-badge">檢測結果出爐</span>
+        <h2 id="resultTitle" class="result-title"></h2>
+        <div id="resultDesc" class="result-desc"></div>
+
+        <div class="line-action-box">
+            <p>請複製你的專屬通關密語：</p>
+            <div id="secretCode" class="secret-code"></div>
+        </div>
+
+        <a id="lineButton" href="#" target="_blank" class="line-btn">
+            <svg class="line-icon" viewBox="0 0 24 24">
+                <path d="M24 10.304c0-5.369-5.383-9.738-12-9.738-6.616 0-12 4.369-12 9.738 0 4.814 4.269 8.846 10.036 9.608.391.084.922.258 1.057.592.121.303.079.777.039 1.085l-.171 1.027c-.053.303-.242 1.186 1.039.646 1.281-.54 6.911-4.069 9.428-6.967 1.739-1.907 2.572-3.843 2.572-5.993z"/>
+            </svg>
+            加入LINE@領取琪姐vicky一對一解方
+        </a>
+    </div>
+</div>
+
+<script>
+    // 專屬 LINE 官方帳號加入好友連結
+    const LINE_ACCOUNT_URL = "https://lin.ee/VmQtHkk";
+
+    // 選項點擊樣式切換
+    document.querySelectorAll('.option-label').forEach(label => {
+        label.addEventListener('click', function() {
+            const groupName = this.querySelector('input').name;
+            document.querySelectorAll(`input[name="${groupName}"]`).forEach(input => {
+                input.closest('.option-label').classList.remove('selected');
+            });
+            this.classList.add('selected');
+        });
+    });
+
+    // 表單送出與計分邏輯
+    document.getElementById('quizForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const q1 = parseInt(document.querySelector('input[name="q1"]:checked').value);
+        const q2 = parseInt(document.querySelector('input[name="q2"]:checked').value);
+        const q3 = parseInt(document.querySelector('input[name="q3"]:checked').value);
+        const q4 = parseInt(document.querySelector('input[name="q4"]:checked').value);
+
+        const totalScore = q1 + q2 + q3 + q4;
+        let result = {};
+
+        if (totalScore >= 4 && totalScore <= 6) {
+            result = {
+                title: "過度燃燒的小火柴 🕯️",
+                code: "小火柴",
+                desc: "親愛的，妳最近是不是把所有的光和熱都留給了工作與身邊的人，卻忘了留一點溫暖給自己？妳的腦袋就像高速運轉的發電機，即使躺在床上思緒也很難關機。神經系統正小聲提醒妳：『該停下來喘口氣了。』"
+            };
+        } else if (totalScore >= 7 && totalScore <= 9) {
+            result = {
+                title: "負重前行的行者 🐢",
+                code: "負重前行者",
+                desc: "妳習慣把所有責任與目標默默扛在肩膀上，肩頸肌肉長期處於『戰鬥姿態』。現在的妳，後頸到兩側肩膀就像背著無形的石頭，緊繃甚至一路蔓延到後腦勺，需要精準深層的鬆綁！"
+            };
+        } else if (totalScore >= 10 && totalScore <= 12) {
+            result = {
+                title: "緊繃的發條熊 🧸",
+                code: "緊繃發條熊",
+                desc: "長時間久坐或維持同一姿勢，讓妳的腰背底層循環變慢了。每次起身或伸展時，腰部就像很久沒上油的發條玩具一樣卡卡的，身體深層正渴望一場溫熱的深層潤滑與釋放。"
+            };
+        } else {
+            result = {
+                title: "深海中的潛水員 ⚓",
+                code: "深海潛水員",
+                desc: "到了下午或傍晚，妳的雙腿是不是像灌了鉛一樣又沉又脹？鞋襪的勒痕特別明顯，走起路來沉甸甸的。身體代謝的負擔都沉積在下半身，正在等待妳幫它做一次由下而上的輕盈引流！"
+            };
+        }
+
+        // 渲染結果
+        document.getElementById('resultTitle').textContent = result.title;
+        document.getElementById('resultDesc').textContent = result.desc;
+        document.getElementById('secretCode').textContent = `「${result.code}」`;
+
+        // 串接專屬 LINE 連結
+        document.getElementById('lineButton').href = LINE_ACCOUNT_URL;
+
+        // 顯示結果並平滑滾動至結果卡片
+        const resultContainer = document.getElementById('resultContainer');
+        resultContainer.style.display = 'block';
+        resultContainer.scrollIntoView({ behavior: 'smooth' });
+    });
+</script>
+
+</body>
+</html>
