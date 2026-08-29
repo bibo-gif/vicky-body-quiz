@@ -219,6 +219,7 @@
             line-height: 1.7;
         }
 
+        /* 密語區塊與一鍵複製樣式 */
         .line-action-box {
             background-color: #F4FBF7;
             border: 1.5px dashed var(--line-color);
@@ -229,15 +230,53 @@
 
         .line-action-box p {
             font-size: 0.95rem;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             color: #2E5C46;
         }
 
+        .code-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
         .secret-code {
-            font-size: 1.25rem;
+            font-size: 1.3rem;
             font-weight: 800;
             color: var(--primary);
             letter-spacing: 1px;
+            background-color: white;
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .copy-btn {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 8px 14px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .copy-btn.copied {
+            background-color: #06C755;
+            color: white;
+            border-color: #06C755;
         }
 
         .line-btn {
@@ -396,8 +435,11 @@
         <div id="resultDesc" class="result-desc"></div>
 
         <div class="line-action-box">
-            <p>請複製你的專屬通關密語：</p>
-            <div id="secretCode" class="secret-code"></div>
+            <p>複製你的專屬密語，加入 LINE 輸入領取解方：</p>
+            <div class="code-wrap">
+                <div id="secretCode" class="secret-code"></div>
+                <button id="copyBtn" type="button" class="copy-btn">📋 點我複製</button>
+            </div>
         </div>
 
         <a id="lineButton" href="#" target="_blank" class="line-btn">
@@ -412,6 +454,7 @@
 <script>
     // 專屬 LINE 官方帳號加入好友連結
     const LINE_ACCOUNT_URL = "https://lin.ee/VmQtHkk";
+    let currentRawCode = "";
 
     // 選項點擊樣式切換
     document.querySelectorAll('.option-label').forEach(label => {
@@ -462,10 +505,18 @@
             };
         }
 
+        // 保存純密語供剪貼簿使用
+        currentRawCode = result.code;
+
         // 渲染結果
         document.getElementById('resultTitle').textContent = result.title;
         document.getElementById('resultDesc').textContent = result.desc;
-        document.getElementById('secretCode').textContent = `「${result.code}」`;
+        document.getElementById('secretCode').textContent = result.code;
+
+        // 重設複製按鈕狀態
+        const copyBtn = document.getElementById('copyBtn');
+        copyBtn.textContent = '📋 點我複製';
+        copyBtn.classList.remove('copied');
 
         // 串接專屬 LINE 連結
         document.getElementById('lineButton').href = LINE_ACCOUNT_URL;
@@ -475,7 +526,51 @@
         resultContainer.style.display = 'block';
         resultContainer.scrollIntoView({ behavior: 'smooth' });
     });
+
+    // 一鍵複製功能 (相容新版 Clipboard API 與傳統 fallback)
+    document.getElementById('copyBtn').addEventListener('click', function() {
+        if (!currentRawCode) return;
+
+        const copySuccess = () => {
+            const btn = document.getElementById('copyBtn');
+            btn.textContent = '✅ 已複製！';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.textContent = '📋 點我複製';
+                btn.classList.remove('copied');
+            }, 2500);
+        };
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(currentRawCode).then(copySuccess).catch(() => {
+                fallbackCopy(currentRawCode);
+                copySuccess();
+            });
+        } else {
+            fallbackCopy(currentRawCode);
+            copySuccess();
+        }
+    });
+
+    function fallbackCopy(text) {
+        const tempInput = document.createElement('input');
+        tempInput.value = text;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+    }
 </script>
 
 </body>
 </html>
+```[cite: 1]
+
+---
+
+### 🛠️ 更新到 GitHub 的步驟：
+1. 進入你的 GitHub repository (`bibo-gif/vicky-body-quiz`)。
+2. 點進 **`index.html`** 檔案，點擊右上角的 **「筆（Edit this file）」**。
+3. 全選並貼上這段新程式碼。
+4. 點右上角綠色按鈕 **「Commit changes...」** 儲存。
+5. 等候約 1 分鐘後重新整理網頁即可生效！
